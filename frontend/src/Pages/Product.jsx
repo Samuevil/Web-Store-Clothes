@@ -1,5 +1,5 @@
 // Product.jsx
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { ShopContext } from '../Context/ShopContext';
 import { useParams } from 'react-router-dom';
 import Breadcrum from '../Components/Breadcrums/Breadcrum';
@@ -12,24 +12,18 @@ const Product = () => {
   const { productId } = useParams();
   const product = allProducts.find((e) => e.id === Number(productId));
 
-  useEffect(() => {
-
-
-
-    
-  }, [productId]);
-
   if (!product) {
     console.error('Product - Product is undefined.');
-    return null;
+    return <div>Product not found</div>;
   }
 
   return (
     <div>
       <Breadcrum product={product} />
       <ProductDisplay product={product} />
-      <DescriptionBox />
-      <RelatedProducts />
+      {/* ✅ Passando a descrição longa para o DescriptionBox */}
+      <DescriptionBox description={product.long_description} />
+      <RelatedProducts category={product.category} />
     </div>
   );
 };

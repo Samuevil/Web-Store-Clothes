@@ -1,101 +1,122 @@
-.add-product{
-    box-sizing:border-box;
-    width:100%;
-    max-width: 800px;
-    padding: 30px 50px;
-    margin:20px 30px;
-    border-radius: 6px;
-    background:white;
-}
-.addproduct-itemfield{
-    width: 100%;
-    color:#7b7b7b;
-    font-size:16px;
-}
-.addproduct-itemfield input{
-    box-sizing: border-box;
-    width: 100%;
-    height: 50px;
-    border-radius: 4px;
-    padding-left:15px;
-    border:1px solid #c3c3c3;
-    outline: none;
-    color:#7b7b7b;
-    font-family: 'Poppins';
-    font-size:14px;
-}
-.addproduct-price{
-    display:flex;
-    gap:40px;
+.list-product {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 0 30px;
+  font-family: 'Poppins', sans-serif;
 }
 
+.list-product h1 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
 
+/* Cabeçalho e linhas de produto usam o mesmo grid */
+.listproduct-format-main {
+  display: grid;
+  grid-template-columns: 80px 180px 100px 100px 100px 180px 250px 60px;
+  gap: 15px;
+  align-items: center;
+  padding: 12px 0;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+}
 
+/* Estilo para as linhas de produto (exceto cabeçalho) */
+.listproduct-format {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
 
-/* Adicione essas regras de estilo para ajustar o layout das imagens */
-.image-upload-container {
-    display: flex;
+.listproduct-format p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+  word-break: break-word;
+}
+
+/* Imagem do produto */
+.listproduct-product-icons img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Ícone de remover */
+.listproduct-remove-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.listproduct-remove-icon:hover {
+  transform: scale(1.2);
+}
+
+/* Container da lista */
+.listproduct-allproducts {
+  margin-top: 10px;
+}
+
+.listproduct-allproducts hr {
+  border: 0;
+  height: 1px;
+  background: #ddd;
+  margin: 8px 0;
+}
+
+/* Responsivo */
+@media (max-width: 1200px) {
+  .listproduct-format-main {
+    grid-template-columns: 70px 150px 90px 90px 90px 150px 200px 50px;
+    gap: 10px;
+    font-size: 13px;
   }
-  
-  .uploaded-image {
-    width: 100px; /* Ajuste o valor conforme necessário */
-    margin-right: 10px; /* Adicione margem entre as imagens, se desejado */
+}
+
+@media (max-width: 900px) {
+  .listproduct-format-main {
+    grid-template-columns: 60px 130px 80px 80px 80px 130px 180px 40px;
+    font-size: 12px;
   }
-  
-  .upload-area {
-    width: 100px; /* Ajuste o valor conforme necessário */
+
+  .listproduct-product-icons img {
+    width: 50px;
+    height: 50px;
   }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.add-product-selector{
-    padding:10px;
-    width: 100px;
-    height: 50px;
-    font-size: 14px;
-    color:#7b7b7b;
-    border:1px solid #7b7b7b8d;
-    border-radius:4px;
-}
-.addproduct-thumbnail-img{
-    height:120px;
-    width: 120px;
-    border-radius:10px;
-    object-fit: contain;
-    margin:10px 0px;
-}
-.addproduct-btn{
-    margin-top:20px;
-    width: 160px;
-    height: 50px;
-    border-radius: 6px;
-    background: #6079ff;
-    cursor:pointer;
-    font-size: 16px;
-    font-weight: 500px;
-}
-@media(max-width:800px){
-    .add-product{
-        width: auto;
-        padding: 30px;
-        margin:20px;  
-    }
 }
 
+@media (max-width: 768px) {
+  .list-product {
+    padding: 0 15px;
+  }
+
+  .listproduct-format-main {
+    grid-template-columns: 50px 120px 70px 70px 70px 120px 150px 35px;
+    font-size: 11px;
+  }
+
+  .listproduct-format p {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Em telas muito pequenas, esconda descrições longas ou ajuste */
+  .listproduct-format-main {
+    grid-template-columns: 50px 120px 70px 70px 70px 0px 0px 35px;
+  }
+
+  .listproduct-format-main:nth-child(n) p:nth-child(6),
+  .listproduct-format-main:nth-child(n) p:nth-child(7) {
+    display: none;
+  }
+
+  /* Mostrar apenas ícones e dados essenciais */
+}

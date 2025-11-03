@@ -1,78 +1,104 @@
-/* Adicione essas modificações ao seu arquivo ListProduct.css */
-
 .list-product {
-    display: grid;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding: 30px 10px;
-    border-radius: 6px;
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding-right: 30px;
-    
-  }
-  
-  .listproduct-format-main {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-    padding: 20px 100px;
-    color: black;
-    font-size: 20px;
-    font-weight: 600;
-    background-color: #f0f0f0;
-    border-radius: 6px;
-    margin-left:20px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 30px 10px;
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding-right: 30px;
+}
+
+.listproduct-format-main {
+  display: grid;
+  /* Antes: 6 colunas → Agora: 8 colunas */
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1.5fr 2fr 0.8fr;
+  gap: 10px;
+  width: 100%;
+  padding: 20px 100px;
+  color: black;
+  font-size: 16px; /* reduzido para caber mais colunas */
+  font-weight: 600;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  margin-left: 20px;
+}
+
+.listproduct-format {
+  display: grid;
+  /* Mesma proporção do cabeçalho */
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1.5fr 2fr 0.8fr;
+  gap: 10px;
+  align-items: center;
+  padding: 15px 100px;
+  border-bottom: 1px solid #ccc;
+  margin-left: 20px;
+  width: 100%;
+}
+
+.listproduct-remove-icon {
+  cursor: pointer;
+  justify-self: center;
+}
+
+.listproduct-allproducts {
+  overflow-y: auto;
+  width: 100%;
+}
+
+.listproduct-product-icons {
+  display: flex;
+  gap: 5px;
+  max-width: 100%;
+  overflow-x: auto;
+  align-items: center;
+}
+
+.listproduct-product-icons img {
+  max-height: 50px;
+  max-width: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Responsivo */
+@media (max-width: 1100px) {
+  .listproduct-format-main,
   .listproduct-format {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+    padding: 15px 50px;
+    font-size: 14px;
   }
-  
+}
+
+@media (max-width: 900px) {
+  .listproduct-format-main,
+  .listproduct-format {
+    padding: 12px 30px;
+    font-size: 13px;
+    grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr 1.2fr 1.8fr 0.7fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .list-product {
+    box-sizing: border-box;
+    width: 95%;
+    height: 100%;
+    padding: 10px 15px;
+    margin: 20px auto;
+  }
+
+  .listproduct-format-main,
+  .listproduct-format {
+    padding: 10px 15px;
+    font-size: 12px;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1.5fr 0.6fr;
+    margin-left: 0;
+  }
+
   .listproduct-remove-icon {
-    cursor: pointer;
-    margin-left: 10px;
-    margin-right:30px;
+    margin-left: 0;
   }
-  
-  .listproduct-allproducts {
-    overflow-y: auto;
-  }
-  
-  .listproduct-product-icons {
-    display: flex;
-    gap: 5px;
-    max-width: 100%;
-    overflow-x: auto;
-  }
-  
-  .listproduct-product-icon img {
-    max-height: 30px; 
-    max-width: 130px;
-  }
-  
-  @media (max-width: 800px) {
-    .list-product {
-      box-sizing: border-box;
-      width: 95%;
-      height: 100%;
-      padding: 10px 30px;
-      margin: 20px auto;
-    }
-    .listproduct-format-main {
-      padding: 15px 0px;
-      color: #454545;
-      padding: 12px;
-    }
-    .listproduct-remove-icon {
-      margin-left: 0;
-    }
-  }
-  
+}

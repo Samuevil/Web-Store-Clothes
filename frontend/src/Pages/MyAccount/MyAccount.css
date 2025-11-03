@@ -1,0 +1,35 @@
+.my-account {
+  display: flex;
+  padding: 40px;
+  gap: 40px;
+}
+
+.menu {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu button {
+  padding: 10px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.menu button:hover {
+  background: #ddd;
+}
+
+.content {
+  flex: 1;
+}
+
+.address-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}

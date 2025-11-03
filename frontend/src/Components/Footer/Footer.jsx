@@ -25,7 +25,7 @@ const Footer = () => {
       </ul>
       <div className="footer-social-icon">
       <div className="footer-icons-container">
-       <a href="https://www.instagram.com/lucassamuevil/" target="_blank" rel="noopener noreferrer">
+       <a href="https://www.instagram.com/samuevil/" target="_blank" rel="noopener noreferrer">
         <img src={instagram_icon} alt="" />
        </a>
 </div>

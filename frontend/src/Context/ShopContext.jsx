@@ -11,7 +11,7 @@ const ShopContextProvider = (props) => {
     localStorage.setItem('cartItems', JSON.stringify(cart));
   }, []);
 
-  // Carregar os itens do carrinho do localStorage ao inicializar o contexto
+  // Carregar os itens do carrinho do localStorage ao inicializar
   useEffect(() => {
     const savedCartItems = localStorage.getItem('cartItems');
     if (savedCartItems) {
@@ -19,7 +19,7 @@ const ShopContextProvider = (props) => {
     }
   }, []);
 
-  // Atualizar o localStorage sempre que houver alterações nos itens do carrinho
+  // Atualizar o localStorage sempre que o carrinho mudar
   useEffect(() => {
     saveCartToLocalStorage(cartItems);
   }, [cartItems, saveCartToLocalStorage]);
@@ -38,30 +38,10 @@ const ShopContextProvider = (props) => {
           body: JSON.stringify(requestBody),
         });
 
-        if (!response.ok) {
-          throw new Error(`Error updating cart. Status: ${response.status}`);
-        }
-
-        try {
-          const responseData = await response.text();
-          console.log('Server Response:', responseData);
-
-          if (response.headers.get('content-type')?.includes('application/json')) {
-            const data = JSON.parse(responseData);
-
-            if (typeof data === 'string' && data.toLowerCase().includes('added')) {
-              console.log('Item added successfully.');
-            } else {
-              console.error('Unexpected server response:', data);
-            }
-          } else {
-            console.log('Non-JSON server response:', responseData);
-          }
-        } catch (jsonError) {
-          console.error('Error parsing JSON:', jsonError);
-        }
-      } catch (error) {
-        console.error(`Error updating cart: ${error}`);
+        // Tenta ler a resposta, mas ignora erros de formato ou status
+        await response.text();
+      } catch (_) {
+        // Silencia erros de rede ou servidor
       }
     }
   };
@@ -80,8 +60,7 @@ const ShopContextProvider = (props) => {
       const updatedCart = { ...prev, [`${itemId}-${size}`]: Math.max((prev[`${itemId}-${size}`] || 0) - 1, 0) };
 
       if (updatedCart[`${itemId}-${size}`] === 0) {
-        // Remove completamente o item se a quantidade atingir zero
-        const { [`${itemId}-${size}`]: removedItem, ...rest } = updatedCart;
+        const { [`${itemId}-${size}`]: _, ...rest } = updatedCart;
         return rest;
       }
 
@@ -95,7 +74,8 @@ const ShopContextProvider = (props) => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        const itemInfo = allProducts.find((product) => product.id === Number(item));
+        const itemId = Number(item.split('-')[0]); 
+        const itemInfo = allProducts.find((product) => product.id === itemId);
         if (itemInfo) {
           totalAmount += cartItems[item] * itemInfo.new_price;
         }
@@ -117,15 +97,13 @@ const ShopContextProvider = (props) => {
   const fetchProducts = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:4000/allproducts');
-      if (!response.ok) {
-        throw new Error('Error fetching products. Status: ' + response.status);
-      }
+      if (!response.ok) return;
       const data = await response.json();
       if (isMounted.current) {
         setAllProducts(data);
       }
-    } catch (error) {
-      console.error('Error fetching products:', error.message);
+    } catch (_) {
+      
     }
   }, []);
 
@@ -133,11 +111,7 @@ const ShopContextProvider = (props) => {
     isMounted.current = true;
 
     const initializeData = async () => {
-      try {
-        await fetchProducts();
-      } catch (error) {
-        console.error('Error initializing data:', error.message);
-      }
+      await fetchProducts();
     };
 
     initializeData();

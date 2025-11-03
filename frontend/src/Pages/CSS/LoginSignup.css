@@ -1,117 +1,255 @@
-.loginSignup{
-    width:100%;
+/* frontend/src/Pages/CSS/LoginSignup.css */
+
+.loginSignup {
+    width: 100%;
     height: 80vh;
-    background:#808080;
+    background: #808080;
     padding-top: 100px;
 }
-.loginsignup-container{
-    width:580px;
-    height: 600px;
-    background:white;
-    margin:auto;
-    padding:40px 60px;
-}
-.loginsignup-container h1{
-    margin:20px 0px;
 
+.loginsignup-container {
+    width: 580px;
+    /* Remova a altura fixa para permitir crescimento */
+    /* height: 600px; */
+    background: white;
+    margin: auto;
+    padding: 40px 60px;
+    overflow-y: auto;
+    position: relative; /* Necessário para o posicionamento absoluto do botão de voltar */
 }
 
-.loginsignup-fields{
-    display:flex;
-    flex-direction:column;
-    gap:29px;
-    margin-top:30px;
+.loginsignup-container h1 {
+    margin: 20px 0px;
 }
-.loginsignup-fields input{
+
+.loginsignup-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 29px;
+    margin-top: 30px;
+}
+
+.loginsignup-fields input {
     height: 72px;
     width: 100%;
     padding-left: 20px;
-    border:1px solid #c9c9c9;
-    color:#5c5c5c;
+    border: 1px solid #c9c9c9;
+    color: #5c5c5c;
     font-size: 18px;
 }
 
-.loginsignup-container button{
+.loginsignup-container button {
     width: 580px;
-    height:72px;
-    color:white;
-    background:#000080;
-    margin-top:30px;
-    border:none;
+    height: 72px;
+    color: white;
+    background: #000080;
+    margin-top: 30px;
+    border: none;
     font-size: 24px;
     font-weight: 500;
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.loginsignup-login{
-    margin-top:20px;
-    color:#5c5c5c;
+/* Estilos para links (Esqueci minha senha, Fazer login com SMS) */
+.loginsignup-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    color: #5c5c5c;
     font-size: 18px;
-    font-weight:500;
-
+    font-weight: 500;
 }
 
-.loginsignup-login span{
-    color:#000080;
+.loginsignup-links span {
+    color: #000080;
     font-weight: 600;
+    cursor: pointer;
 }
 
-.loginsignup-agree{
-    display:flex;
-    align-items: center;
-    margin-top:25px;
-    gap:20px;
-    color:#5c5c5c;
+/* Estilo para o divisor "OU" */
+.loginsignup-divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #5c5c5c;
     font-size: 18px;
-    font-weight:500;
+    font-weight: 500;
 }
-@media(max-width:1280px){
-    .loginsignup{
-        padding-top:50px;
+
+/* Estilos para botões sociais */
+.loginsignup-social {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.loginsignup-social button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 72px;
+    color: white;
+    background: #4267B2; /* Cor padrão para social */
+    border: none;
+    font-size: 24px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.loginsignup-social .google-btn {
+    background: #4285F4;
+}
+
+.loginsignup-social .facebook-btn {
+    background: #4267B2;
+}
+
+/* Estilos para o termo de aceite (no cadastro) */
+.loginsignup-agree {
+    margin-top: 25px;
+    color: #5c5c5c;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.loginsignup-agree span {
+    color: #000080;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Estilos para o rodapé (link para trocar entre login/cadastro) */
+.loginsignup-footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #5c5c5c;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.loginsignup-footer span {
+    color: #000080;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Estilo para o botão de voltar (seta) */
+.forgot-password-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.forgot-password-back span {
+    font-size: 24px;
+    color: #ff5722; /* Cor vermelha da seta */
+    cursor: pointer;
+    /* Adiciona um pequeno espaçamento interno para o clique */
+    padding: 5px;
+    /* Adiciona borda arredondada se desejar */
+    /* border-radius: 50%; */
+    /* background: #f8f8f8; */
+}
+
+/* Responsividade (mantidas e adaptadas) */
+@media (max-width: 1280px) {
+    .loginSignup {
+        padding-top: 50px;
     }
-    .loginsignup-container{
-        width:auto;
-        max-width:500px;
-        max-height:500px;
+
+    .loginsignup-container {
+        width: auto;
+        max-width: 500px;
+        padding: 30px 40px;
     }
-    .loginsignup-container h1{
+
+    .loginsignup-container h1 {
         margin: 10px 0px;
     }
-    .logindignup-fields{
-        gap:20px;
-        margin-top:20px;
-    }
-    .loginsignup-fields input{
-        height:65px;
-        width:93%;
-    }
-    .loginsignup-container button{
-        width:100%;
-    }
-    .loginsignup-login{
-        font-size:16px;
-    }
-    .loginsignup-agree{
-        font-size:14px;
-        gap:10px;
 
+    .loginsignup-fields {
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .loginsignup-fields input {
+        height: 65px;
+        width: calc(100% - 20px);
+    }
+
+    .loginsignup-container button {
+        width: 100%;
+    }
+
+    .loginsignup-links {
+        font-size: 16px;
+    }
+
+    .loginsignup-divider {
+        font-size: 16px;
+    }
+
+    .loginsignup-social button {
+        height: 65px;
+        font-size: 20px;
+    }
+
+    .loginsignup-agree {
+        font-size: 14px;
+    }
+
+    .loginsignup-footer {
+        font-size: 16px;
+    }
+
+    /* Responsividade para o botão de voltar */
+    .forgot-password-back {
+        top: 15px;
+        left: 15px;
+    }
+
+    .forgot-password-back span {
+        font-size: 20px;
     }
 }
-@media(max-width:800px){
-    .loginsignup-container{
-        padding:20px 30px;
+
+@media (max-width: 800px) {
+    .loginsignup-container {
+        padding: 20px 30px;
     }
-    .loginsignup-container h1{
-        font-size:24px;
+
+    .loginsignup-container h1 {
+        font-size: 24px;
     }
-    .logsignup-fields{
-        margin-top:20px;
+
+    .loginsignup-fields {
+        margin-top: 20px;
     }
-    .loginsignup-fields input{
-        height:50px;
+
+    .loginsignup-fields input {
+        height: 50px;
     }
-    .loginsignup-container button{
-        height:50px;
-        font-size:16px;
+
+    .loginsignup-social button {
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .loginsignup-container button {
+        height: 50px;
+        font-size: 16px;
+    }
+
+    /* Responsividade para o botão de voltar */
+    .forgot-password-back {
+        top: 10px;
+        left: 10px;
+    }
+
+    .forgot-password-back span {
+        font-size: 18px;
     }
 }

@@ -1,3 +1,4 @@
+/* Estilos existentes mantidos */
 .navbar {
     display:flex;
     justify-content:space-around;
@@ -25,7 +26,7 @@
 .nav-logo p {
     color: white;
     font-size:38px;
-    font-weight:600px ;
+    font-weight:600px ; /* Lembre-se que px não é necessário aqui */
 }
 
 .nav-menu {
@@ -96,10 +97,95 @@
     background:#000080;
     color:white;
 }
+
 .nav-dropdown{
     display: none;
-
 }
+
+/* Novos estilos para o dropdown do usuário */
+.nav-user-menu-container {
+    position: relative; /* Define o contêiner como referência para o posicionamento absoluto do dropdown */
+}
+
+.nav-user-button {
+    /* Estilo baseado no botão existente, mas adaptado para o dropdown */
+    width: 157px; /* Mesmo tamanho do botão de login/logout anterior */
+    height: 58px;
+    outline: none;
+    border: 1px solid #7a7a7a;
+    border-radius: 75px;
+    color: #515151;
+    font-size: 20px;
+    font-weight: 500;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Espaça o nome e o ícone */
+    padding: 0 15px; /* Espaçamento interno para o nome e o ícone */
+    gap: 8px; /* Espaçamento entre o texto e o ícone */
+}
+
+.nav-user-button:hover {
+    /* Opcional: Efeito hover */
+    background-color: #f0f0f0;
+}
+
+.nav-user-dropdown-icon {
+    width: 16px; /* Tamanho do ícone */
+    height: 16px;
+    transition: transform 0.3s ease; /* Transição suave para rotação */
+}
+
+.nav-user-dropdown-icon.open {
+    transform: rotate(180deg); /* Rotação do ícone quando o menu está aberto */
+}
+
+.nav-user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px); /* Posiciona logo abaixo do botão */
+    right: 0; /* Alinha à direita do botão */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    min-width: 180px; /* Largura mínima do dropdown */
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+}
+
+.nav-user-dropdown-menu li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-user-dropdown-menu li:last-child {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+.nav-user-dropdown-menu li a,
+.nav-user-dropdown-menu li button {
+    text-decoration: none;
+    color: #515151;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+}
+
+.nav-user-dropdown-menu li a:hover,
+.nav-user-dropdown-menu li button:hover {
+    color: #000080; /* Cor de destaque ao passar o mouse */
+}
+
+/* Estilos responsivos existentes mantidos */
 @media(max-width:1280px){
     .navbar{
         padding:12px 50px;
@@ -198,7 +284,7 @@
 }
 @media(max-width:500px){
     .navbar{
-        width:8px 0px;
+        width:8px 0px; /* Verifique esta propriedade */
         gap:0;
     }
     .nav-logo{
