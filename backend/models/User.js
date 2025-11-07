@@ -6,25 +6,25 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    
+    // ✅ address como OBJETO (não string!)
     address: {
       street: String,
       number: String,
+      neighborhood: String, // Bairro
+      complement: String,   // Complemento
       city: String,
       state: String,
-      zip: String,
+      zip: String
     },
-    verified: {
-      type: Boolean,
-      default: false, 
-    },
-    verificationCode: {
-      type: String, 
-      default: null,
-    },
+    
+    phone: { type: String }, // no nível raiz (fora do address)
+    
+    verified: { type: Boolean, default: false },
+    verificationCode: { type: String, default: null },
   },
   { timestamps: true }
 );
-
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

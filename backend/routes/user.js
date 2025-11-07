@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/me", authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select("-password");
+    const user = await User.findById(req.user.id).select("-password");
     if (!user)
       return res.status(404).json({ error: "Usuário não encontrado" });
     res.json(user);
@@ -16,29 +16,38 @@ router.get("/me", authMiddleware, async (req, res) => {
   }
 });
 
-
 router.put("/update", authMiddleware, async (req, res) => {
   try {
-    const { name, address, city, state, zip, phone } = req.body;
-    const user = await User.findById(req.userId);
+    const { name, phone, address } = req.body;
 
-    if (!user)
-      return res.status(404).json({ error: "Usuário não encontrado" });
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: "Usuário não encontrado" });
 
-    user.name = name || user.name;
-    user.address = address || user.address;
-    user.city = city || user.city;
-    user.state = state || user.state;
-    user.zip = zip || user.zip;
-    user.phone = phone || user.phone;
+    // Atualiza campos raiz
+    if (name !== undefined) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+
+    // Atualiza address COMPLETO (se fornecido)
+    if (address && typeof address === 'object') {
+      user.address = {
+        street: address.street || user.address?.street,
+        number: address.number || user.address?.number,
+        neighborhood: address.neighborhood || user.address?.neighborhood,
+        complement: address.complement || user.address?.complement,
+        city: address.city || user.address?.city,
+        state: address.state || user.address?.state,
+        zip: address.zip || user.address?.zip
+      };
+    }
 
     await user.save();
-
-    res.json({ message: "Informações atualizadas com sucesso!" });
+    const updatedUser = await User.findById(user._id).select("-password");
+    res.json(updatedUser);
   } catch (err) {
     console.error("Erro ao atualizar perfil:", err);
     res.status(500).json({ error: "Erro ao atualizar perfil" });
   }
 });
+
 
 module.exports = router;

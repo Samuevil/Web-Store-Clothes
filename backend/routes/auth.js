@@ -5,7 +5,7 @@ const User = require("../models/User");
 const nodemailer = require("nodemailer");
 
 const router = express.Router();
-const JWT_SECRET = "segredo_super_secreto";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // --- Configura o transporte de e-mail ---
 const transporter = nodemailer.createTransport({
