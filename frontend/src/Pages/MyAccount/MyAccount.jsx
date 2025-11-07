@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 const MyAccount = () => {
   const navigate = useNavigate();
   
-  // Estado com address como objeto
   const [user, setUser] = useState({
     name: '',
     email: '',
     phone: '',
+    cpf: '', // ✅ novo campo
     address: {
       street: '',
       number: '',
@@ -40,11 +40,11 @@ const MyAccount = () => {
 
       const data = await response.json();
       
-      // Garante que address seja um objeto (mesmo que vazio)
       setUser({
         name: data.name || '',
         email: data.email || '',
         phone: data.phone || '',
+        cpf: data.cpf ? formatCPF(data.cpf) : '', // ✅ formata ao carregar
         address: {
           street: data.address?.street || '',
           number: data.address?.number || '',
@@ -67,6 +67,21 @@ const MyAccount = () => {
     fetchUser();
   }, []);
 
+  // ✅ Função para formatar CPF com máscara
+  const formatCPF = (cpf) => {
+    const cleaned = cpf.replace(/\D/g, '');
+    return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  };
+
+  // ✅ Função para lidar com input de CPF
+  const handleCPFChange = (e) => {
+    const value = e.target.value;
+    const cleaned = value.replace(/\D/g, ''); // Remove tudo que não é dígito
+    const limited = cleaned.slice(0, 11); // Máximo 11 dígitos
+    const formatted = formatCPF(limited);
+    setUser({ ...user, cpf: formatted });
+  };
+
   const saveProfile = async () => {
     try {
       const token = localStorage.getItem('auth-token');
@@ -75,6 +90,9 @@ const MyAccount = () => {
         navigate('/login');
         return;
       }
+
+      // ✅ Remove máscara antes de enviar
+      const cpfLimpo = user.cpf.replace(/\D/g, '');
 
       const response = await fetch('http://localhost:4000/api/user/update', {
         method: 'PUT',
@@ -85,7 +103,8 @@ const MyAccount = () => {
         body: JSON.stringify({
           name: user.name,
           phone: user.phone,
-          address: user.address // ← envia como objeto!
+          cpf: cpfLimpo, // ✅ envia só os números
+          address: user.address
         })
       });
 
@@ -124,6 +143,17 @@ const MyAccount = () => {
           value={user.email}
           readOnly
           style={{ width: '100%', padding: '8px', backgroundColor: '#f5f5f5' }}
+        />
+      </div>
+
+      <div style={{ marginBottom: '15px' }}>
+        <label>CPF:</label>
+        <input
+          type="text"
+          value={user.cpf}
+          onChange={handleCPFChange} // ✅ usa função especial
+          placeholder="000.000.000-00"
+          style={{ width: '100%', padding: '8px' }}
         />
       </div>
 

@@ -6,6 +6,12 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+
+    cpf: {
+      type: String,
+      unique: true,
+      match:[/^\d{11}$/, "CPF deve conter exatamente 11 dígitos numéricos"],
+    },
     
     // ✅ address como OBJETO (não string!)
     address: {
@@ -17,6 +23,7 @@ const userSchema = new mongoose.Schema(
       state: String,
       zip: String
     },
+    
     
     phone: { type: String }, // no nível raiz (fora do address)
     
