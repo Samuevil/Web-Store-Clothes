@@ -1,4 +1,3 @@
-// frontend/src/Pages/LoginSignup.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './CSS/LoginSignup.css';
@@ -7,7 +6,12 @@ const LoginSignup = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [currentView, setCurrentView] = useState(location.pathname === '/register' ? 'signup' : 'login');
+  const [currentView, setCurrentView] = useState(() => {
+    if (location.pathname === '/register') return 'signup';
+    if (location.pathname === '/forgot-password') return 'forgot';
+    return 'login';
+  });
+
   const [step, setStep] = useState(1);
 
   // LOGIN
@@ -15,6 +19,9 @@ const LoginSignup = () => {
 
   // SIGNUP
   const [signupData, setSignupData] = useState({ name: '', email: '', password: '', confirmPassword: '', code: '' });
+
+  // RECUPERAÇÃO DE SENHA
+  const [forgotData, setForgotData] = useState({ email: '', code: '', newPassword: '', confirmNewPassword: '' });
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -25,7 +32,7 @@ const LoginSignup = () => {
     }
   }, [location.search, navigate]);
 
-  // LOGIN HANDLERS
+  // --- LOGIN ---
   const handleLoginChange = (e) => setLoginData({ ...loginData, [e.target.name]: e.target.value });
 
   const handleLoginSubmitStep1 = async (e) => {
@@ -78,12 +85,11 @@ const LoginSignup = () => {
     }
   };
 
-  // SIGNUP HANDLERS
+  // --- SIGNUP ---
   const handleSignupChange = (e) => setSignupData({ ...signupData, [e.target.name]: e.target.value });
 
   const handleSignupSubmitStep1 = async (e) => {
     e.preventDefault();
-
     if (!signupData.name || !signupData.email || !signupData.password || !signupData.confirmPassword)
       return alert('Preencha todos os campos.');
     if (signupData.password !== signupData.confirmPassword)
@@ -138,9 +144,67 @@ const LoginSignup = () => {
     }
   };
 
+  // --- ESQUECI MINHA SENHA ---
+  const handleForgotSubmitStep1 = async (e) => {
+    e.preventDefault();
+    if (!forgotData.email) return alert('Digite seu e-mail.');
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotData.email }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setStep(2);
+        alert('Código de recuperação enviado para seu e-mail.');
+      } else {
+        alert(data.message || data.error || 'Erro ao solicitar recuperação.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Erro na conexão com o servidor.');
+    }
+  };
+
+  const handleForgotSubmitStep2 = async (e) => {
+    e.preventDefault();
+    if (!forgotData.code) return alert('Digite o código de recuperação.');
+    if (!forgotData.newPassword || !forgotData.confirmNewPassword) 
+      return alert('Preencha a nova senha.');
+    if (forgotData.newPassword !== forgotData.confirmNewPassword)
+      return alert('As senhas não conferem.');
+
+    try {
+      const res = await fetch('http://localhost:4000/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: forgotData.email,
+          code: forgotData.code,
+          newPassword: forgotData.newPassword
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert('Senha redefinida com sucesso! Faça login.');
+        setCurrentView('login');
+        setStep(1);
+        setForgotData({ email: '', code: '', newPassword: '', confirmNewPassword: '' });
+      } else {
+        alert(data.message || 'Código inválido ou expirado.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Erro na conexão com o servidor.');
+    }
+  };
+
   return (
     <div className='loginSignup'>
       <div className="loginsignup-container">
+        
+        {/* LOGIN */}
         {currentView === 'login' && (
           <form onSubmit={step === 1 ? handleLoginSubmitStep1 : handleLoginSubmitStep2}>
             <h1>Entre</h1>
@@ -149,6 +213,14 @@ const LoginSignup = () => {
                 <input name="email" value={loginData.email} onChange={handleLoginChange} placeholder="Email" required />
                 <input name="password" type="password" value={loginData.password} onChange={handleLoginChange} placeholder="Senha" required />
                 <button type="submit">Continuar</button>
+                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                  <span 
+                    onClick={() => setCurrentView('forgot')} 
+                    style={{ color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}
+                  >
+                    Esqueci minha senha
+                  </span>
+                </div>
               </>
             )}
             {step === 2 && (
@@ -156,6 +228,14 @@ const LoginSignup = () => {
                 <p>Código enviado para {loginData.email}</p>
                 <input name="code" value={loginData.code} onChange={handleLoginChange} placeholder="Digite o código" required />
                 <button type="submit">Confirmar</button>
+                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                  <span 
+                    onClick={() => setStep(1)} 
+                    style={{ color: '#666', cursor: 'pointer' }}
+                  >
+                    ← Voltar
+                  </span>
+                </div>
               </>
             )}
             <div className="loginsignup-footer">
@@ -164,6 +244,7 @@ const LoginSignup = () => {
           </form>
         )}
 
+        {/* SIGNUP */}
         {currentView === 'signup' && (
           <form onSubmit={step === 1 ? handleSignupSubmitStep1 : handleSignupSubmitStep2}>
             <h1>Crie sua conta</h1>
@@ -188,6 +269,71 @@ const LoginSignup = () => {
             </div>
           </form>
         )}
+
+        {/* ESQUECI MINHA SENHA */}
+        {currentView === 'forgot' && (
+          <form onSubmit={step === 1 ? handleForgotSubmitStep1 : handleForgotSubmitStep2}>
+            <h1>Redefinir senha</h1>
+            {step === 1 && (
+              <>
+                <input 
+                  name="email" 
+                  value={forgotData.email} 
+                  onChange={(e) => setForgotData({ ...forgotData, email: e.target.value })} 
+                  placeholder="Seu e-mail" 
+                  required 
+                />
+                <button type="submit">Enviar código</button>
+                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                  <span 
+                    onClick={() => setCurrentView('login')} 
+                    style={{ color: '#666', cursor: 'pointer' }}
+                  >
+                    ← Voltar para login
+                  </span>
+                </div>
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <p>Código enviado para {forgotData.email}</p>
+                <input 
+                  name="code" 
+                  value={forgotData.code} 
+                  onChange={(e) => setForgotData({ ...forgotData, code: e.target.value })} 
+                  placeholder="Código de recuperação" 
+                  required 
+                />
+                <input 
+                  name="newPassword" 
+                  type="password" 
+                  value={forgotData.newPassword} 
+                  onChange={(e) => setForgotData({ ...forgotData, newPassword: e.target.value })} 
+                  placeholder="Nova senha" 
+                  required 
+                />
+                <input 
+                  name="confirmNewPassword" 
+                  type="password" 
+                  value={forgotData.confirmNewPassword} 
+                  onChange={(e) => setForgotData({ ...forgotData, confirmNewPassword: e.target.value })} 
+                  placeholder="Confirme a nova senha" 
+                  required 
+                />
+                <button type="submit">Redefinir senha</button>
+                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                  <span 
+                    onClick={() => setStep(1)} 
+                    style={{ color: '#666', cursor: 'pointer' }}
+                  >
+                    ← Voltar
+                  </span>
+                </div>
+              </>
+            )}
+          </form>
+        )}
+        
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// --- Configura o transporte de e-mail ---
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -24,7 +24,6 @@ transporter.verify((error) => {
   }
 });
 
-// --- REGISTRAR ---
 router.post("/register", async (req, res) => {
   try {
     let { name, email, password } = req.body;
@@ -65,7 +64,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// --- VERIFICAR CÓDIGO DE REGISTRO ---
+
 router.post("/register-verify", async (req, res) => {
   try {
     let { email, code } = req.body;
@@ -74,8 +73,6 @@ router.post("/register-verify", async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ error: "Usuário não encontrado" });
-
-    console.log("🔍 Tentando verificar:", { email, code, codeNoBD: user.verificationCode });
 
     if (String(user.verificationCode) !== String(code)) {
       return res.status(400).json({ error: "Código incorreto" });
@@ -92,7 +89,6 @@ router.post("/register-verify", async (req, res) => {
   }
 });
 
-// --- LOGIN (passo 1: envio de código) ---
 router.post("/login", async (req, res) => {
   try {
     let { email, password } = req.body;
@@ -137,8 +133,6 @@ router.post("/verify-code", async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ error: "Usuário não encontrado" });
 
-    console.log("🔍 Verificando código de login:", { email, code, codeNoBD: user.verificationCode });
-
     if (String(user.verificationCode) !== String(code))
       return res.status(400).json({ error: "Código incorreto" });
 
@@ -153,4 +147,62 @@ router.post("/verify-code", async (req, res) => {
   }
 });
 
+
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: "E-mail é obrigatório" });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+
+    if (!user) {
+      return res.json({ success: true, message: "Se o e-mail estiver cadastrado, enviamos um código." });
+    }
+
+    const recoveryCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.verificationCode = recoveryCode;
+    await user.save();
+
+    await transporter.sendMail({
+      from: `"Sua Loja" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Redefinição de senha",
+      text: `Seu código de recuperação é: ${recoveryCode}\n\nEste código é válido por 10 minutos.`,
+    });
+
+    console.log(`📧 Código de recuperação enviado para ${email}: ${recoveryCode}`);
+    res.json({ success: true, message: "Código de recuperação enviado para seu e-mail." });
+  } catch (err) {
+    console.error("❌ Erro na recuperação de senha:", err);
+    res.status(500).json({ error: "Erro interno no servidor" });
+  }
+});
+
+
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+
+    if (!email || !code || !newPassword) {
+      return res.status(400).json({ error: "Todos os campos são obrigatórios" });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user || String(user.verificationCode) !== String(code)) {
+      return res.status(400).json({ error: "Código inválido ou expirado." });
+    }
+
+    user.password = newPassword;
+    user.verificationCode = null;
+    await user.save();
+
+    res.json({ success: true, message: "Senha redefinida com sucesso!" });
+  } catch (err) {
+    console.error("❌ Erro ao redefinir senha:", err);
+    res.status(500).json({ error: "Erro interno no servidor" });
+  }
+});
 module.exports = router;
