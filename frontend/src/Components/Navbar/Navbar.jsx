@@ -1,4 +1,3 @@
-// frontend/src/Components/Navbar.jsx
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import './Navbar.css';
 import logo from '../Assets/logo.png';
@@ -21,7 +20,6 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem('auth-token');
     if (token) {
-      // Aqui você pode buscar o nome do usuário do banco ou decodificar JWT
       const storedName = localStorage.getItem('user-name') || 'Usuário';
       setUserName(storedName);
     }
@@ -61,15 +59,63 @@ const Navbar = () => {
 
       <ul ref={menuRef} className="nav-menu">
         <li onClick={() => setMenu('shop')}><Link to='/'>Shop</Link>{menu==='shop' && location.pathname !== '/cart' && <hr />}</li>
-        <li onClick={() => setMenu('mens')}><Link to='/mens'>Men</Link>{menu==='mens' && location.pathname !== '/cart' && <hr />}</li>
-        <li onClick={() => setMenu('womens')}><Link to='/womens'>Women</Link>{menu==='womens' && location.pathname !== '/cart' && <hr />}</li>
-        <li onClick={() => setMenu('kids')}><Link to='/kids'>Kids</Link>{menu==='kids' && location.pathname !== '/cart' && <hr />}</li>
+        
+        <li className="nav-dropdown-item">
+          <Link to='/mens'>Men</Link>
+          <ul className="nav-submenu">
+            <li><Link to='/mens/camisetas'>Camisetas</Link></li>
+            <li><Link to='/mens/camisas'>Camisas</Link></li>
+            <li><Link to='/mens/polo'>Polos</Link></li>
+            <li><Link to='/mens/regatas'>Regatas</Link></li>
+            <li><Link to='/mens/moletons'>Moletons</Link></li>
+            <li><Link to='/mens/jaquetas'>Jaquetas</Link></li>
+            <li><Link to='/mens/calças'>Calças</Link></li>
+            <li><Link to='/mens/bermudas'>Bermudas</Link></li>
+            <li><Link to='/mens/tênis'>Tênis</Link></li>
+            <li><Link to='/mens/sandálias'>Sandálias</Link></li>
+            <li><Link to='/mens/bonés'>Bonés</Link></li>
+            <li><Link to='/mens/óculos'>Óculos</Link></li>
+          </ul>
+        </li>
+        
+        <li className="nav-dropdown-item">
+          <Link to='/womens'>Women</Link>
+          <ul className="nav-submenu">
+            <li><Link to='/womens/camisetas'>Camisetas</Link></li>
+            <li><Link to='/womens/blusas'>Blusas</Link></li>
+            <li><Link to='/womens/tops'>Tops</Link></li>
+            <li><Link to='/womens/regatas'>Regatas</Link></li>
+            <li><Link to='/womens/moletons'>Moletons</Link></li>
+            <li><Link to='/womens/jaquetas'>Jaquetas</Link></li>
+            <li><Link to='/womens/vestidos'>Vestidos</Link></li>
+            <li><Link to='/womens/saias'>Saias</Link></li>
+            <li><Link to='/womens/calças'>Calças</Link></li>
+            <li><Link to='/womens/shorts'>Shorts</Link></li>
+            <li><Link to='/womens/sandálias'>Sandálias</Link></li>
+            <li><Link to='/womens/tênis'>Tênis</Link></li>
+            <li><Link to='/womens/bolsas'>Bolsas</Link></li>
+            <li><Link to='/womens/óculos'>Óculos</Link></li>
+            <li><Link to='/womens/bijuterias'>Bijuterias</Link></li>
+          </ul>
+        </li>
+        
+        <li className="nav-dropdown-item">
+          <Link to='/kids'>Kids</Link>
+          <ul className="nav-submenu">
+            <li><Link to='/kids/camisetas'>Camisetas</Link></li>
+            <li><Link to='/kids/calças'>Calças</Link></li>
+            <li><Link to='/kids/vestidos'>Vestidos</Link></li>
+            <li><Link to='/kids/conjuntos'>Conjuntos</Link></li>
+            <li><Link to='/kids/sapatos'>Sapatos</Link></li>
+            <li><Link to='/kids/bonés'>Bonés</Link></li>
+          </ul>
+        </li>
       </ul>
 
       <div className="nav-login-cart">
         <div className="nav-user-menu-container" ref={userMenuRef}>
           <button className="nav-user-button" onMouseEnter={!isLoggedIn ? toggleUserMenu : null} onClick={isLoggedIn ? toggleUserMenu : null}>
-       Olá, {isLoggedIn && userName ? userName.split(' ')[0] : 'faça seu login'}
+            Olá, {isLoggedIn && userName ? userName.split(' ')[0] : 'faça seu login'}
             <img className={`nav-user-dropdown-icon ${showUserMenu ? 'open' : ''}`} src={nav_dropdown} alt="Menu" />
           </button>
 

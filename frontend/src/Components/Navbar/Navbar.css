@@ -1,4 +1,4 @@
-/* Estilos existentes mantidos */
+/* Seu CSS existente + melhorias */
 .navbar {
     display:flex;
     justify-content:space-around;
@@ -6,27 +6,24 @@
     box-shadow: 0 1px 3px -2px black; 
     align-items: center;
     background-color: #4f4f4f;
-    
 }
 
 .nav-logo {
     display:flex;
     align-items: center;
     gap:10px;
-
 }
 
 .nav-logo img {
  max-width: 100px;
  margin-top: -30px;
  margin-bottom: -30px;
-
 }
 
 .nav-logo p {
     color: white;
     font-size:38px;
-    font-weight:600px ; /* Lembre-se que px não é necessário aqui */
+    font-weight:600;
 }
 
 .nav-menu {
@@ -34,10 +31,10 @@
     align-items: center;
     list-style: none;
     gap:50px;
-    color:626262;
+    color:#626262;
     font-size:20px;
     font-weight: 500;
-
+    position: relative;
 }
 
 .nav-menu li{
@@ -47,10 +44,12 @@
     justify-content:center;
     gap: 3px;
     cursor:pointer;
+    position: relative;
 }
 
 .nav-menu li a{
     color: white;
+    text-decoration: none;
 }
 
 .nav-menu hr {
@@ -59,6 +58,51 @@
     height:3px;
     border-radius:10px;
     background:#000080;
+}
+
+/* ✅ Dropdown profissional */
+.nav-dropdown-item {
+    position: relative;
+}
+
+.nav-submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    list-style: none;
+    padding: 12px 0;
+    margin: 0;
+    min-width: 220px;
+    z-index: 1000;
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.nav-dropdown-item:hover .nav-submenu {
+    display: block;
+}
+
+.nav-submenu li {
+    padding: 8px 20px;
+    margin: 0;
+}
+
+.nav-submenu li a {
+    color: #333;
+    font-size: 15px;
+    text-decoration: none;
+    display: block;
+    transition: color 0.2s;
+}
+
+.nav-submenu li a:hover {
+    color: #000080;
+    background: #f8f9fa;
 }
 
 .nav-login-cart{
@@ -102,14 +146,13 @@
     display: none;
 }
 
-/* Novos estilos para o dropdown do usuário */
+/* Dropdown do usuário (seu código existente) */
 .nav-user-menu-container {
-    position: relative; /* Define o contêiner como referência para o posicionamento absoluto do dropdown */
+    position: relative;
 }
 
 .nav-user-button {
-    /* Estilo baseado no botão existente, mas adaptado para o dropdown */
-    width: 157px; /* Mesmo tamanho do botão de login/logout anterior */
+    width: 157px;
     height: 58px;
     outline: none;
     border: 1px solid #7a7a7a;
@@ -121,30 +164,29 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Espaça o nome e o ícone */
-    padding: 0 15px; /* Espaçamento interno para o nome e o ícone */
-    gap: 8px; /* Espaçamento entre o texto e o ícone */
+    justify-content: space-between;
+    padding: 0 15px;
+    gap: 8px;
 }
 
 .nav-user-button:hover {
-    /* Opcional: Efeito hover */
     background-color: #f0f0f0;
 }
 
 .nav-user-dropdown-icon {
-    width: 16px; /* Tamanho do ícone */
+    width: 16px;
     height: 16px;
-    transition: transform 0.3s ease; /* Transição suave para rotação */
+    transition: transform 0.3s ease;
 }
 
 .nav-user-dropdown-icon.open {
-    transform: rotate(180deg); /* Rotação do ícone quando o menu está aberto */
+    transform: rotate(180deg);
 }
 
 .nav-user-dropdown-menu {
     position: absolute;
-    top: calc(100% + 5px); /* Posiciona logo abaixo do botão */
-    right: 0; /* Alinha à direita do botão */
+    top: calc(100% + 5px);
+    right: 0;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -152,8 +194,8 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    min-width: 180px; /* Largura mínima do dropdown */
-    z-index: 1000; /* Garante que fique acima de outros elementos */
+    min-width: 180px;
+    z-index: 1000;
 }
 
 .nav-user-dropdown-menu li {
@@ -162,7 +204,7 @@
 }
 
 .nav-user-dropdown-menu li:last-child {
-    border-bottom: none; /* Remove a borda do último item */
+    border-bottom: none;
 }
 
 .nav-user-dropdown-menu li a,
@@ -182,126 +224,50 @@
 
 .nav-user-dropdown-menu li a:hover,
 .nav-user-dropdown-menu li button:hover {
-    color: #000080; /* Cor de destaque ao passar o mouse */
+    color: #000080;
 }
 
-/* Estilos responsivos existentes mantidos */
+/* Responsivo */
 @media(max-width:1280px){
-    .navbar{
-        padding:12px 50px;
-    }
-    .nav-logo img{
-        width: 40px;
-    }
-    .nav-logo p{
-        font-size:25px;
-    }
-    .nav-menu{
-        gap:30px;
-        font-size:16px;
-    }
-    .nav-login-cart{
-        gap:30px;
-    }
-    .nav-login-cart button{
-        width:120px;
-        height:45px;
-        font-size:16px;
-    }
-    .nav-cart-count{
-        margin-left:-40px;
-        font-size:12px;
-    }
+    .navbar{ padding:12px 50px; }
+    .nav-logo img{ width: 40px; }
+    .nav-logo p{ font-size:25px; }
+    .nav-menu{ gap:30px; font-size:16px; }
+    .nav-login-cart{ gap:30px; }
+    .nav-login-cart button{ width:120px; height:45px; font-size:16px; }
+    .nav-cart-count{ margin-left:-40px; font-size:12px; }
+    .nav-submenu { display: none !important; }
 }
 
 @media(max-width:1024px){
-    .navbar{
-        padding:12px 30px;
-    }
-    .nav-menu{
-        gap:25px;
-        font-size:14px;
-        color: white;
-    }
-
-  
-  .nav-menu li a {
-    color: white;
-  }
-  
-    .nav-login-cart button{
-        width:80px;
-        height:35px;
-        font-size:14px;
-    }
-    .nav-login-cart img{
-        width:30px;
-    }
-    .nav-cart-count{
-        width:18px;
-        height:18px;
-    }
+    .navbar{ padding:12px 30px; }
+    .nav-menu{ gap:25px; font-size:14px; }
+    .nav-login-cart button{ width:80px; height:35px; font-size:14px; }
+    .nav-login-cart img{ width:30px; }
+    .nav-cart-count{ width:18px; height:18px; }
+    .nav-submenu { display: none !important; }
 }
+
 @media(max-width:800px){
-    .navbar{
-        padding:10px 0px;
-    }
-    .nav-dropdown{
-       display:block;
-       width:30px;
-       rotate:-90deg;
-       transition:0.5s;
-
-      
-      
-    }
-    .nav-menu{
-        display:none;
-        height:80px;
-        width:100%;
-        position:absolute;
-        background-color: #808080;
-        justify-content:center;
+    .navbar{ padding:10px 0px; }
+    .nav-dropdown{ display:block; width:30px; rotate:-90deg; }
+    .nav-menu{ 
+        display:none; 
+        height:80px; 
+        width:100%; 
+        position:absolute; 
+        background-color: #808080; 
+        justify-content:center; 
         top:50px;
-
     }
-
-      
-  .nav-menu li a {
-    color: white;
-  }
-    .nav-menu-visible{
-        display:flex;
-    }
-
- 
-
-   
-    .nav-dropdown.open{
-        transform:rotate(90deg);
-
-    }
+    .nav-menu-visible{ display:flex; }
+    .nav-submenu { display: none !important; }
 }
+
 @media(max-width:500px){
-    .navbar{
-        width:8px 0px; /* Verifique esta propriedade */
-        gap:0;
-    }
-    .nav-logo{
-        transform:scale(0.8);
-
-    }
-    .nav-menu{
-        height:70px;
-        top:50px;
-    }
-
-      
-  .nav-menu li a {
-    color: white;
-  }
-  
-    .nav-login-cart{
-        transform:scale(0.8);
-    }
+    .navbar{ gap:0; }
+    .nav-logo{ transform:scale(0.8); }
+    .nav-menu{ height:70px; top:50px; }
+    .nav-login-cart{ transform:scale(0.8); }
+    .nav-submenu { display: none !important; }
 }

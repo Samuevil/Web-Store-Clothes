@@ -25,9 +25,24 @@ const ShopCategory = (props) => {
     if (!allProducts || allProducts.length === 0) {
       fetchData();
     } else {
-      const category = props.category.toLowerCase();
-      const productsInCategory = allProducts.filter(item => item.category.toLowerCase() === category);
-      setFilteredProducts(productsInCategory);
+      // ✅ Correção: mapeia a rota para o prefixo da categoria
+      const categoryMap = {
+        'mens': 'Masculino',
+        'womens': 'Feminino',
+        'kids': 'Infantil'
+      };
+
+      const expectedPrefix = categoryMap[props.category];
+      
+      if (expectedPrefix) {
+        const productsInCategory = allProducts.filter(item => 
+          item.category && item.category.startsWith(expectedPrefix)
+        );
+        setFilteredProducts(productsInCategory);
+      } else {
+        // Página principal (Shop) — mostra todos
+        setFilteredProducts(allProducts);
+      }
     }
   }, [allProducts, fetchProducts, props.category]);
 
@@ -38,9 +53,7 @@ const ShopCategory = (props) => {
           setShowSortOptions(false);
         }
       };
-
       document.addEventListener('mousedown', handleOutsideClick);
-
       return () => {
         document.removeEventListener('mousedown', handleOutsideClick);
       };
@@ -48,15 +61,9 @@ const ShopCategory = (props) => {
   }, [showSortOptions]);
 
   useEffect(() => {
-    // Implemente a lógica de ordenação com base na opção selecionada (sortBy)
-    // Use setFilteredProducts para atualizar a lista de produtos exibidos
-    if (sortBy === '20') {
-      setVisibleProducts(20);
-    } else if (sortBy === '40') {
-      setVisibleProducts(40);
-    } else if (sortBy === '80') {
-      setVisibleProducts(80);
-    }
+    if (sortBy === '20') setVisibleProducts(20);
+    else if (sortBy === '40') setVisibleProducts(40);
+    else if (sortBy === '80') setVisibleProducts(80);
   }, [sortBy]);
 
   const toggleSortOptions = () => {
@@ -65,19 +72,15 @@ const ShopCategory = (props) => {
 
   const handleSortChange = (option) => {
     setSortBy(option);
-    setShowSortOptions(false); // Fechar as opções após a seleção
+    setShowSortOptions(false);
   };
 
   const handleLoadMore = () => {
-    setVisibleProducts((prevVisibleProducts) => prevVisibleProducts + 10);
+    setVisibleProducts((prev) => prev + 10);
   };
 
   if (!allProducts || !Array.isArray(allProducts)) {
-    return (
-      <div className='shop-category'>
-        <p>Error loading products</p>
-      </div>
-    );
+    return <div className='shop-category'><p>Carregando produtos...</p></div>;
   }
 
   return (
@@ -85,7 +88,7 @@ const ShopCategory = (props) => {
       <img className='shopcategory-banner' src={props.banner} alt="" />
       <div className='shopcategory-indexSort'>
         <p>
-          <span>{`Showing 1-${Math.min(filteredProducts.length, visibleProducts)}`}</span> out of {allProducts.length} products
+          <span>{`Showing 1-${Math.min(filteredProducts.length, visibleProducts)}`}</span> out of {filteredProducts.length} products
         </p>
         <div className="shopcategory-sort" ref={sortRef}>
           <div className="sort-header" onClick={toggleSortOptions}>
@@ -102,12 +105,14 @@ const ShopCategory = (props) => {
       </div>
       <div className="shopcategory-products">
         {filteredProducts.slice(0, visibleProducts).map((product) => (
-          <Item key={product.id} product={product} />
+          <Item key={product._id} product={product} />
         ))}
       </div>
-      <div className="shopcategory-loadmore" onClick={handleLoadMore}>
-        Explore More
-      </div>
+      {visibleProducts < filteredProducts.length && (
+        <div className="shopcategory-loadmore" onClick={handleLoadMore}>
+          Explore More
+        </div>
+      )}
     </div>
   );
 };

@@ -1,3 +1,4 @@
+// frontend/src/Context/ShopContext.jsx
 import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
 
 export const ShopContext = createContext(null);
@@ -37,11 +38,9 @@ const ShopContextProvider = (props) => {
           },
           body: JSON.stringify(requestBody),
         });
-
-        // Tenta ler a resposta, mas ignora erros de formato ou status
         await response.text();
       } catch (_) {
-        // Silencia erros de rede ou servidor
+        // Silencia erros
       }
     }
   };
@@ -51,22 +50,18 @@ const ShopContextProvider = (props) => {
       const updatedCart = { ...prev, [`${itemId}-${size}`]: (prev[`${itemId}-${size}`] || 0) + 1 };
       return updatedCart;
     });
-
     await updateCartOnServer('http://localhost:4000/addtocart', { itemId, size });
   }, []);
 
   const removeFromCart = useCallback(async (itemId, size) => {
     setCartItems((prev) => {
       const updatedCart = { ...prev, [`${itemId}-${size}`]: Math.max((prev[`${itemId}-${size}`] || 0) - 1, 0) };
-
       if (updatedCart[`${itemId}-${size}`] === 0) {
         const { [`${itemId}-${size}`]: _, ...rest } = updatedCart;
         return rest;
       }
-
       return updatedCart;
     });
-
     await updateCartOnServer('http://localhost:4000/removefromcart', { itemId, size });
   }, []);
 
@@ -74,10 +69,11 @@ const ShopContextProvider = (props) => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        const itemId = Number(item.split('-')[0]); 
-        const itemInfo = allProducts.find((product) => product.id === itemId);
+        const itemId = item.split('-')[0]; // _id é string no MongoDB
+        const itemInfo = allProducts.find((product) => product._id === itemId);
         if (itemInfo) {
-          totalAmount += cartItems[item] * itemInfo.new_price;
+          // ✅ Preço fixo temporário (você pode adicionar price nas variants depois)
+          totalAmount += cartItems[item] * 99.90;
         }
       }
     }
@@ -94,28 +90,26 @@ const ShopContextProvider = (props) => {
     return totalItem;
   }, [cartItems]);
 
+  // ✅ CORRIGIDO: URL correta do backend
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:4000/allproducts');
+      const response = await fetch('http://localhost:4000/api/products/all');
       if (!response.ok) return;
       const data = await response.json();
       if (isMounted.current) {
         setAllProducts(data);
       }
     } catch (_) {
-      
+      // Silencia erros
     }
   }, []);
 
   useEffect(() => {
     isMounted.current = true;
-
     const initializeData = async () => {
       await fetchProducts();
     };
-
     initializeData();
-
     return () => {
       isMounted.current = false;
     };

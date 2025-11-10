@@ -1,11 +1,11 @@
-// frontend/src/pages/MyAccount.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MyAccount = () => {
   const navigate = useNavigate();
   
-  const [activeTab, setActiveTab] = useState('personal'); // 'personal' ou 'address'
+  const [activeTab, setActiveTab] = useState('personal'); 
 
   const [user, setUser] = useState({
     name: '',
@@ -25,7 +25,7 @@ const MyAccount = () => {
 
   const [loading, setLoading] = useState(true);
 
-  // ... (seu fetchUser e saveProfile existentes)
+  
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('auth-token');

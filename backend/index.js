@@ -10,11 +10,27 @@ let PORT = process.env.PORT || 4000;
 
 connectDB();
 
-
 app.use(express.json());
+
+// ✅ Configuração CORS atualizada - permite múltiplas origens
+const allowedOrigins = [
+  "http://localhost:3000", // Frontend da loja
+  "http://localhost:5173", // Frontend do admin (Vite default)
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: function (origin, callback) {
+      // Permite requisições sem origem (como Postman, curl, etc.)
+      if (!origin) return callback(null, true);
+      
+      // Verifica se a origem está na lista de permitidas
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Origem não permitida pelo CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -32,11 +48,9 @@ const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const userRoutes = require("./routes/user");
 
-
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/user", userRoutes);
-
 
 app.get("/", (req, res) => {
   res.send("✅ API do E-commerce rodando com sucesso!");
