@@ -1,10 +1,11 @@
+// backend/routes/product.js
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
 const multer = require("multer");
 const path = require("path");
 
-// Configuração do Multer (reutilize sua configuração existente)
+// Configuração do Multer
 const storage = multer.diskStorage({
   destination: "./uploads/images",
   filename: (req, file, cb) => {
@@ -13,7 +14,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Rota para salvar produto com variações
+// Rota para adicionar produto
 router.post("/addproduct", upload.array("images", 20), async (req, res) => {
   try {
     const {
@@ -21,10 +22,21 @@ router.post("/addproduct", upload.array("images", 20), async (req, res) => {
       category,
       short_description,
       long_description,
-      variations // formato: [{ color, colorCode, sizes: [{ size, stock }] }]
+      old_price,
+      new_price,
+      variations
     } = req.body;
 
-    // Organiza as imagens por variação
+    // ✅ Converte preços para número
+    const newPriceNum = parseFloat(new_price);
+    const oldPriceNum = old_price ? parseFloat(old_price) : undefined;
+
+    // ✅ Validação
+    if (isNaN(newPriceNum) || newPriceNum <= 0) {
+      return res.status(400).json({ error: "Preço atual é obrigatório e deve ser maior que zero." });
+    }
+
+    // Processa variações
     const variationsArray = JSON.parse(variations);
     let imageIndex = 0;
     const variants = variationsArray.map(variant => {
@@ -44,11 +56,14 @@ router.post("/addproduct", upload.array("images", 20), async (req, res) => {
       };
     });
 
+    // ✅ Cria produto
     const newProduct = new Product({
       name,
       category,
       short_description,
       long_description,
+      old_price: oldPriceNum,
+      new_price: newPriceNum, // ✅ Número válido
       variants
     });
 
@@ -60,24 +75,22 @@ router.post("/addproduct", upload.array("images", 20), async (req, res) => {
   }
 });
 
-// ✅ Rota para excluir produto por ID
+// ✅ Rota para buscar todos os produtos
+router.get("/all", async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (err) {
+    console.error("Erro ao buscar produtos:", err);
+    res.status(500).json({ error: "Erro ao buscar produtos" });
+  }
+});
+
+// ✅ Rota para deletar produto
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // Verifica se o ID foi fornecido
-    if (!id) {
-      return res.status(400).json({ error: "ID do produto não fornecido" });
-    }
-
-    // Tenta encontrar e excluir o produto
-    const deletedProduct = await Product.findByIdAndDelete(id);
-    
-    // Verifica se o produto existia
-    if (!deletedProduct) {
-      return res.status(404).json({ error: "Produto não encontrado" });
-    }
-
+    await Product.findByIdAndDelete(id);
     res.json({ success: true, message: "Produto excluído com sucesso!" });
   } catch (err) {
     console.error("Erro ao excluir produto:", err);
@@ -85,48 +98,13 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Rota para coleções recentes (com fallback)
+// Outras rotas...
 router.get("/newcollections", async (req, res) => {
   try {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-    let products = await Product.find({
-      createdAt: { $gte: thirtyDaysAgo }
-    })
-    .sort({ createdAt: -1 })
-    .limit(20);
-
-    // Fallback: se não houver novos, pega os mais recentes
-    if (products.length === 0) {
-      products = await Product.find()
-        .sort({ createdAt: -1 })
-        .limit(20);
-    }
-
+    const products = await Product.find().sort({ createdAt: -1 }).limit(10);
     res.json(products);
   } catch (err) {
-    console.error("Erro em newcollections:", err);
-    res.status(500).json({ error: "Erro ao buscar coleções" });
-  }
-});
-
-// Outras rotas (mantenha as que já tem)
-router.get("/all", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: "Erro ao buscar produtos" });
-  }
-});
-
-router.get("/popularinwomen", async (req, res) => {
-  try {
-    const products = await Product.find({ category: "women" }).limit(8);
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: "Erro ao buscar produtos populares" });
+    res.status(500).json({ error: "Erro ao buscar novas coleções" });
   }
 });
 

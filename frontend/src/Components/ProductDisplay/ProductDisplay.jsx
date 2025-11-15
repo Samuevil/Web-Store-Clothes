@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom'; // ✅ Import correto
 import { ShopContext } from '../../Context/ShopContext';
 import './ProductDisplay.css';
 
-const ProductDisplay = () => { // ✅ Removido props, usamos URL
-  const { allProducts, fetchProducts } = useContext(ShopContext);
+const ProductDisplay = () => {
+  const { id } = useParams(); // ✅ Obtém ID da URL
+  const { allProducts, fetchProducts, addToCart } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Pega o ID da URL
-  const url = window.location.href;
-  const id = url.split('/').pop();
-
+  // Busca produto pelo ID
   useEffect(() => {
     if (!allProducts || allProducts.length === 0) {
       fetchProducts();
@@ -22,48 +21,73 @@ const ProductDisplay = () => { // ✅ Removido props, usamos URL
     }
   }, [allProducts, id, fetchProducts]);
 
+  // Inicializa seleção ao carregar o produto
   useEffect(() => {
     if (product?.variants?.length > 0) {
       const firstVariant = product.variants[0];
       setSelectedColor(firstVariant.color);
+      setSelectedSize(null); // Reseta tamanho
       if (firstVariant.images?.length > 0) {
         setSelectedImage(firstVariant.images[0]);
       }
+    } else {
+      setSelectedColor(null);
+      setSelectedImage(null);
     }
   }, [product]);
 
-  const { addToCart } = useContext(ShopContext);
+  // Atualiza ao mudar cor
+  useEffect(() => {
+    if (selectedColor && product) {
+      const variant = product.variants.find(v => v.color === selectedColor);
+      if (variant && variant.images?.length > 0) {
+        setSelectedImage(variant.images[0]);
+      }
+      setSelectedSize(null); // Reseta tamanho ao mudar cor
+    }
+  }, [selectedColor, product]);
 
   if (!product) return <div>Carregando produto...</div>;
 
   const currentVariant = product.variants.find(v => v.color === selectedColor);
 
   const handleColorChange = (color) => {
-    const variant = product.variants.find(v => v.color === color);
     setSelectedColor(color);
-    setSelectedSize(null);
-    if (variant?.images?.length > 0) {
-      setSelectedImage(variant.images[0]);
-    }
   };
 
   const handleSizeSelect = (size) => {
-    const sizeData = currentVariant?.sizes.find(s => s.size === size);
+    if (!currentVariant) return;
+    const sizeData = currentVariant.sizes.find(s => s.size === size);
     if (sizeData?.stock > 0) {
       setSelectedSize(selectedSize === size ? null : size);
     }
   };
 
   const handleAddToCart = () => {
-    if (!selectedColor || !selectedSize) {
-      alert('Selecione cor e tamanho.');
+    if (!selectedColor || !selectedSize || !currentVariant) {
+      alert('Selecione cor e tamanho disponíveis.');
       return;
     }
+    
+    const sizeData = currentVariant.sizes.find(s => s.size === selectedSize);
+    if (!sizeData || sizeData.stock <= 0) {
+      alert('Este item está esgotado.');
+      return;
+    }
+
     addToCart(product._id, {
       variant: currentVariant,
       size: selectedSize,
-      image: selectedImage
+      image: selectedImage,
+      price: product.new_price
     });
+  };
+
+  // Verifica se o tamanho está disponível
+  const isSizeAvailable = (size) => {
+    if (!currentVariant) return false;
+    const sizeData = currentVariant.sizes.find(s => s.size === size);
+    return sizeData?.stock > 0;
   };
 
   return (
@@ -74,7 +98,7 @@ const ProductDisplay = () => { // ✅ Removido props, usamos URL
             <img
               key={index}
               src={image}
-              alt={`Product ${index + 1}`}
+              alt={`Imagem ${index + 1} - ${product.name}`}
               onClick={() => setSelectedImage(image)}
               className={`thumbnail ${selectedImage === image ? 'selected' : ''}`}
             />
@@ -84,14 +108,16 @@ const ProductDisplay = () => { // ✅ Removido props, usamos URL
           <img
             className="productdisplay-main-img"
             src={selectedImage || "https://via.placeholder.com/400"}
-            alt="Produto"
+            alt={product.name}
           />
         </div>
       </div>
       
       <div className="productdisplay-right">
         <h1>{product.name}</h1>
-        <div className="productdisplay-right-stars">⭐⭐⭐⭐☆ <p>(122)</p></div>
+        <div className="productdisplay-right-stars">
+          ⭐⭐⭐⭐☆ <p>(122)</p>
+        </div>
         
         <div className="productdisplay-right-prices">
           {product.old_price && (
@@ -124,6 +150,7 @@ const ProductDisplay = () => { // ✅ Removido props, usamos URL
                   cursor: 'pointer',
                   border: selectedColor === variant.color ? '2px solid black' : '1px solid #ddd'
                 }}
+                title={variant.color}
               />
             ))}
           </div>
@@ -132,7 +159,7 @@ const ProductDisplay = () => { // ✅ Removido props, usamos URL
         <div className="productdisplay-right-size">
           <h1>Tamanho</h1>
           <div className="productdisplay-right-sizes">
-            {currentVariant?.sizes.map((sizeOpt) => (
+            {currentVariant?.sizes?.map((sizeOpt) => (
               <div
                 key={sizeOpt.size}
                 onClick={() => handleSizeSelect(sizeOpt.size)}
@@ -149,12 +176,19 @@ const ProductDisplay = () => { // ✅ Removido props, usamos URL
                 {sizeOpt.size}
                 {sizeOpt.stock === 0 && <span> Esgotado</span>}
               </div>
-            ))}
+            )) || <div>Nenhum tamanho disponível</div>}
           </div>
         </div>
 
-        <button onClick={handleAddToCart}>ADICIONAR AO CARRINHO</button>
-        <p className="productdisplay-right-category"><span>Categoria:</span> {product.category}</p>
+        <button 
+          onClick={handleAddToCart}
+          disabled={!selectedColor || !selectedSize || !isSizeAvailable(selectedSize)}
+        >
+          ADICIONAR AO CARRINHO
+        </button>
+        <p className="productdisplay-right-category">
+          <span>Categoria:</span> {product.category}
+        </p>
       </div>
     </div>
   );
