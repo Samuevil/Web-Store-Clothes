@@ -13,19 +13,20 @@ const userSchema = new mongoose.Schema(
       match:[/^\d{11}$/, "CPF deve conter exatamente 11 dígitos numéricos"],
     },
     
-    // ✅ address como OBJETO (não string!)
+
     address: {
       street: String,
       number: String,
-      neighborhood: String, // Bairro
-      complement: String,   // Complemento
+      neighborhood: String, 
+      complement: String,   
       city: String,
       state: String,
       zip: String
     },
     
     
-    phone: { type: String }, // no nível raiz (fora do address)
+    phone: { type: String }, 
+    
     
     verified: { type: Boolean, default: false },
     verificationCode: { type: String, default: null },

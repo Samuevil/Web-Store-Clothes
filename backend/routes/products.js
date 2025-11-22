@@ -1,11 +1,37 @@
-// backend/routes/product.js
+
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
 const multer = require("multer");
 const path = require("path");
 
-// Configuração do Multer
+
+const updateImageUrls = (products, baseUrl) => {
+  const updateProductImages = (product) => {
+    if (product.variants) {
+      product.variants = product.variants.map(variant => {
+        if (variant.images) {
+          variant.images = variant.images.map(image => {
+            if (image.startsWith('/images/')) {
+              return `${baseUrl}${image}`;
+            }
+            return image;
+          });
+        }
+        return variant;
+      });
+    }
+    return product;
+  };
+
+  if (Array.isArray(products)) {
+    return products.map(updateProductImages);
+  } else {
+    return updateProductImages(products);
+  }
+};
+
+
 const storage = multer.diskStorage({
   destination: "./uploads/images",
   filename: (req, file, cb) => {
@@ -14,7 +40,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Rota para adicionar produto
+
 router.post("/addproduct", upload.array("images", 20), async (req, res) => {
   try {
     const {
@@ -27,16 +53,16 @@ router.post("/addproduct", upload.array("images", 20), async (req, res) => {
       variations
     } = req.body;
 
-    // ✅ Converte preços para número
+
     const newPriceNum = parseFloat(new_price);
     const oldPriceNum = old_price ? parseFloat(old_price) : undefined;
 
-    // ✅ Validação
+ 
     if (isNaN(newPriceNum) || newPriceNum <= 0) {
       return res.status(400).json({ error: "Preço atual é obrigatório e deve ser maior que zero." });
     }
 
-    // Processa variações
+
     const variationsArray = JSON.parse(variations);
     let imageIndex = 0;
     const variants = variationsArray.map(variant => {
@@ -44,6 +70,7 @@ router.post("/addproduct", upload.array("images", 20), async (req, res) => {
       const images = [];
       for (let i = 0; i < imageCount; i++) {
         if (req.files && req.files[imageIndex]) {
+        
           images.push(`/images/${req.files[imageIndex].filename}`);
           imageIndex++;
         }
@@ -56,14 +83,14 @@ router.post("/addproduct", upload.array("images", 20), async (req, res) => {
       };
     });
 
-    // ✅ Cria produto
+
     const newProduct = new Product({
       name,
       category,
       short_description,
       long_description,
       old_price: oldPriceNum,
-      new_price: newPriceNum, // ✅ Número válido
+      new_price: newPriceNum, 
       variants
     });
 
@@ -75,18 +102,36 @@ router.post("/addproduct", upload.array("images", 20), async (req, res) => {
   }
 });
 
-// ✅ Rota para buscar todos os produtos
+
 router.get("/all", async (req, res) => {
   try {
     const products = await Product.find({});
-    res.json(products);
+    const baseUrl = `http://localhost:${process.env.PORT || 4000}`;
+    const productsWithFullUrls = updateImageUrls(products, baseUrl);
+    res.json(productsWithFullUrls);
   } catch (err) {
     console.error("Erro ao buscar produtos:", err);
     res.status(500).json({ error: "Erro ao buscar produtos" });
   }
 });
 
-// ✅ Rota para deletar produto
+
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Produto não encontrado" });
+    }
+    const baseUrl = `http://localhost:${process.env.PORT || 4000}`;
+    const productWithFullUrls = updateImageUrls(product, baseUrl);
+    res.json(productWithFullUrls);
+  } catch (err) {
+    console.error("Erro ao buscar produto:", err);
+    res.status(500).json({ error: "Erro ao buscar produto" });
+  }
+});
+
+
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -98,11 +143,13 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Outras rotas...
+
 router.get("/newcollections", async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 }).limit(10);
-    res.json(products);
+    const baseUrl = `http://localhost:${process.env.PORT || 4000}`;
+    const productsWithFullUrls = updateImageUrls(products, baseUrl);
+    res.json(productsWithFullUrls);
   } catch (err) {
     res.status(500).json({ error: "Erro ao buscar novas coleções" });
   }

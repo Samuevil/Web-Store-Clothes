@@ -1,6 +1,6 @@
 .hero {
-    height:100vh;
-    background: linear-gradient(180deg,#808080, #dcdcdc  100%);;
+    height:30vh;
+    background: linear-gradient(180deg,#808080, #dcdcdc  100%);
     display:flex;
     padding-right: 80px;
 }
@@ -49,7 +49,6 @@
     color:white;
     font-size: 22px;
     font-weight:500;
-
 }
 
 .hero-right{
@@ -58,6 +57,12 @@
     align-items: center;
     justify-content: center;
 }
+
+.hero-right img {
+    max-width: 100%;
+    height: auto;
+}
+
 @media(max-width:1280px){
     .hero-left{
         padding-left:100px;

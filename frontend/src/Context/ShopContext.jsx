@@ -1,4 +1,4 @@
-// frontend/src/Context/ShopContext.jsx
+
 import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
 
 export const ShopContext = createContext(null);
@@ -12,7 +12,7 @@ const ShopContextProvider = (props) => {
     localStorage.setItem('cartItems', JSON.stringify(cart));
   }, []);
 
-  // Carregar os itens do carrinho do localStorage ao inicializar
+
   useEffect(() => {
     const savedCartItems = localStorage.getItem('cartItems');
     if (savedCartItems) {
@@ -20,7 +20,7 @@ const ShopContextProvider = (props) => {
     }
   }, []);
 
-  // Atualizar o localStorage sempre que o carrinho mudar
+
   useEffect(() => {
     saveCartToLocalStorage(cartItems);
   }, [cartItems, saveCartToLocalStorage]);
@@ -40,7 +40,7 @@ const ShopContextProvider = (props) => {
         });
         await response.text();
       } catch (_) {
-        // Silencia erros
+     
       }
     }
   };
@@ -69,10 +69,10 @@ const ShopContextProvider = (props) => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        const itemId = item.split('-')[0]; // _id é string no MongoDB
+        const itemId = item.split('-')[0]; 
         const itemInfo = allProducts.find((product) => product._id === itemId);
         if (itemInfo) {
-          // ✅ Preço fixo temporário (você pode adicionar price nas variants depois)
+      
           totalAmount += cartItems[item] * 99.90;
         }
       }
@@ -90,7 +90,7 @@ const ShopContextProvider = (props) => {
     return totalItem;
   }, [cartItems]);
 
-  // ✅ CORRIGIDO: URL correta do backend
+
   const fetchProducts = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:4000/api/products/all');
@@ -100,7 +100,7 @@ const ShopContextProvider = (props) => {
         setAllProducts(data);
       }
     } catch (_) {
-      // Silencia erros
+
     }
   }, []);
 
