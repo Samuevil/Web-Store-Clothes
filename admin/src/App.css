@@ -1,0 +1,23 @@
+/* admin/src/App.css */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  margin: 0; /* Remove qualquer margem do layout principal */
+  padding: 0; /* Remove qualquer padding do layout principal */
+}
+
+.admin-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0; /* Remove margem */
+  padding: 0; /* Remove padding */
+}
+
+/* Garante que o conteúdo comece logo abaixo do navbar */
+.admin-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px; /* Mantém um pouco de padding interno para o conteúdo */
+  margin-top: 0; /* Remove qualquer margem superior */
+}

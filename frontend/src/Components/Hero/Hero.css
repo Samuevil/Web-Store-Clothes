@@ -1,158 +1,264 @@
+/* frontend/src/Components/Hero/Hero.css */
+
+/* Estilo geral do Hero */
 .hero {
-    height:30vh;
-    background: linear-gradient(180deg,#808080, #dcdcdc  100%);
-    display:flex;
-    padding-right: 80px;
+  position: relative;
+  width: 100%;
+  height: 50vh; /* Altura padrão */
+  min-height: 300px; /* Altura mínima */
+  max-height: 600px; /* Altura máxima */
+  overflow: hidden; /* Garante que nada ultrapasse o container principal */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-left {
-    flex:1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap:20px;
-    padding-left: 180px;
-    line-height: 1.1;
+/* Container do slide (importante para overlays e posicionamento) */
+.hero-slide-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Garante que o conteúdo interno não ultrapasse */
 }
 
-.hero-left h2{
-    color:#090909;
-    font-size: 26px;
-    font-weight:600;
+/* Estilo para cada slide individual */
+.hero-slide {
+  position: relative; /* Mantém o posicionamento relativo para os elementos internos */
+  width: 100%;
+  height: 100%;
+  /* NÃO usa flexbox aqui para simplificar e garantir que o background cubra */
 }
 
-.hero-left p {
-    color:#171717;
-    font-size:100px;
-    font-weight:700;
+/* Estilo para o background de imagem */
+.hero-background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover; /* Imagem cobre o espaço mantendo proporção - CHAVE DA RESPONSIVIDADE */
+  background-position: center; /* Centraliza a imagem */
+  background-repeat: no-repeat; /* Não repete a imagem */
+  z-index: 1; /* Fica atrás do conteúdo */
 }
 
-.hero-hand-icon{
-    display: flex;
-    align-items:center;
-    gap:20px;
-}
-.hero-hand-icon img{
-    width: 105px;
-    
-}
-.hero-latest-btn button{
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    gap:15px;
-    width:310px;
-    height:70px;
-    border-radius:75px;
-    margin-top:30px;
-    background:#000080;
-    color:white;
-    font-size: 22px;
-    font-weight:500;
+/* Estilo para o overlay (opcional para melhor contraste) */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Preto com 30% de opacidade */
+  z-index: 2; /* Fica entre o background e o conteúdo */
 }
 
-.hero-right{
-    flex:1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Estilo para o conteúdo textual (título, subtítulo) - Posicionado no topo */
+.hero-text {
+  position: absolute;
+  top: 20px; /* Distância do topo */
+  left: 50%;
+  transform: translateX(-50%); /* Centraliza horizontalmente */
+  text-align: center;
+  color: white;
+  z-index: 3; /* Fica acima do overlay */
+  width: 90%; /* Limite de largura para responsividade */
+  max-width: 600px; /* Largura máxima */
 }
 
-.hero-right img {
-    max-width: 100%;
-    height: auto;
+.hero-title {
+  margin: 0 0 10px 0;
+  font-size: clamp(1.5rem, 4vw, 2.5rem); /* Tamanho responsivo */
+  font-weight: bold;
+  line-height: 1.2;
 }
 
-@media(max-width:1280px){
-    .hero-left{
-        padding-left:100px;
-    }
-    .hero-left h2{
-        font-size:22px;
-    }
-    .hero-left p{
-        font-size:60px;    
-    }
-    .hero-hand-icon img{
-        width:80px;
-    }
-    .hero-latest-btn{
-        gap:10px;
-        width:250px;
-        height:60px;
-        margin-top:20px;
-        font-size: 18px;
-    }
-    .hero-right img{
-        width:500px;
-    }
+.hero-subtitle {
+  margin: 0;
+  font-size: clamp(1rem, 2.5vw, 1.5rem); /* Tamanho responsivo */
+  font-weight: normal;
+  line-height: 1.3;
 }
 
-@media(max-width:1024px){
-    .hero-left{
-        padding-left:80px;
-    }
-    .hero-left h2{
-        font-size:20px;
-    }
-    .hero-left p{
-        font-size:50px;    
-    }
-    .hero-hand-icon img{
-        width:65px;
-    }
-    .hero-latest-btn{
-        width:220px;
-        height:50px;
-        font-size: 16px;
-    }
-    .hero-right img{
-        width:400px;
-    }
+/* Estilo para o botão - Posicionado acima dos indicadores */
+.hero-button {
+  position: absolute;
+  bottom: 80px; /* Ajuste este valor para posicionar o botão acima dos indicadores */
+  left: 50%;
+  transform: translateX(-50%); /* Centraliza horizontalmente */
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #000;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  z-index: 4; /* Fica acima de outros elementos */
 }
 
-@media(max-width:800px){
-    .hero-left{
-        padding-left:30px;
-    }
-    .hero-left h2{
-        font-size:16px;
-    }
-    .hero-left p{
-        font-size:40px;    
-    }
-    .hero-hand-icon img{
-        width:50px;
-    }
-    .hero-latest-btn{
-        width:175px;
-        height:40px;
-        font-size: 13px;
-    }
-    .hero-right img{
-        width:300px;
-    }
+.hero-button:hover {
+  background-color: #333;
 }
-@media(max-width:500px){
-    .hero{
-        flex-direction:column;
-    }
-    .hero-right{
-        display:none;
-    }
-    .hero-left h2{
-        font-size: 18px;   
-    }
-    .hero-left p{
-        font-size:50px;
-    }
-    .hero-hand-icon img{
-        width:55px;
-    }
-    .hero-latest-btn{
-        width:200px;
-        height:45px;
-        font-size:14px;
-    }
 
+/* Controles (setas) */
+.hero-controls {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  z-index: 4; /* Fica acima de tudo */
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.hero-btn {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.hero-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Indicadores (pontos) */
+.hero-indicators {
+  position: absolute;
+  bottom: 20px; /* Distância da parte inferior */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 4; /* Fica acima de tudo */
+}
+
+.hero-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero-indicator.active {
+  background-color: white;
+}
+
+.hero-indicator:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Loading */
+.hero-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh; /* ou a altura desejada */
+  width: 100%;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* --- RESPONSIVIDADE --- */
+
+@media (max-width: 768px) {
+  .hero {
+    height: 40vh;
+    min-height: 250px;
+  }
+
+  .hero-text {
+    top: 15px; /* Ajuste para telas menores */
+    width: 95%; /* Mais largura disponível */
+  }
+
+  .hero-title {
+    font-size: clamp(1.3rem, 3.5vw, 2rem);
+  }
+
+  .hero-subtitle {
+    font-size: clamp(0.9rem, 2.2vw, 1.3rem);
+  }
+
+  .hero-button {
+    bottom: 70px; /* Ajuste responsivo para a posição do botão */
+    padding: 10px 25px;
+    font-size: 0.9rem;
+  }
+
+  .hero-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .hero-indicators {
+    bottom: 15px; /* Ajuste responsivo para a posição do indicador */
+  }
+
+  .hero-indicator {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 30vh;
+    min-height: 200px;
+  }
+
+  .hero-text {
+    top: 10px; /* Ajuste para telas pequenas */
+  }
+
+  .hero-title {
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    margin-bottom: 8px;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(0.8rem, 1.8vw, 1.1rem);
+    margin-bottom: 12px;
+  }
+
+  .hero-button {
+    bottom: 60px; /* Ajuste responsivo para a posição do botão */
+    padding: 8px 20px;
+    font-size: 0.85rem;
+  }
+
+  .hero-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .hero-controls {
+    padding: 0 10px;
+  }
+
+  .hero-indicators {
+    bottom: 10px; /* Ajuste responsivo para a posição do indicador */
+    gap: 6px;
+  }
+
+  .hero-indicator {
+    width: 8px;
+    height: 8px;
+  }
 }

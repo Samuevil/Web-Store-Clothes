@@ -1,0 +1,117 @@
+/* admin/src/Components/EditHero/EditHero.css */
+/* Copia e cola o conteúdo do AddHero.css aqui e faça ajustes se necessário */
+/* Por exemplo, o título pode mudar de "Adicionar Banner" para "Editar Banner" no JSX, o CSS pode ser o mesmo ou similar */
+.edit-hero-container {
+  padding: 20px;
+  max-width: 800px; /* Ajuste a largura conforme necessário */
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.edit-hero-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 15px;
+}
+
+.edit-hero-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group input[type="checkbox"] {
+  /* Estilo específico para checkbox se necessário */
+  transform: scale(1.2); /* Aumenta o tamanho do checkbox */
+  margin-right: 8px;
+}
+
+.form-group input[type="file"] {
+  padding: 8px;
+  border: 1px dashed #aaa;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.current-media-display {
+  margin-top: 5px;
+}
+
+.current-media-display img,
+.current-media-display video {
+  max-width: 100%;
+  max-height: 200px; /* Ajuste a altura conforme necessário */
+  object-fit: contain; /* Mostra a imagem inteira */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.image-preview {
+  margin-top: 10px;
+}
+
+.image-preview img {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.edit-hero-form button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.edit-hero-form button:hover {
+  background: #0056b3;
+}
+
+.edit-hero-form button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.edit-hero-loading, .edit-hero-error {
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+}
+
+.edit-hero-error {
+  color: red;
+}

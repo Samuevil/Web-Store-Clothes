@@ -1,10 +1,9 @@
+// admin/src/Components/Sidebar/Sidebar.jsx
 import React from 'react'
 import './Sidebar.css'
 import {Link} from 'react-router-dom'
 import add_product_icon from '../../assets/Product_cart.svg'
 import list_product_icon from '../../assets/Product_list_icon.svg'
-
-
 
 const Sidebar = () => {
   return (
@@ -20,6 +19,21 @@ const Sidebar = () => {
         <div className="sidebar-item">
           <img src={list_product_icon} alt="" />
           <p>Product List</p>
+        </div>
+      </Link>
+
+      {/* Novas opções para gerenciar Hero */}
+      <Link to={'/addhero'} style={{textDecoration:"none"}}>
+        <div className="sidebar-item">
+          <img src={add_product_icon} alt="" />
+          <p>Add Hero Banner</p>
+        </div>
+      </Link>
+
+      <Link to={'/listhero'} style={{textDecoration:"none"}}>
+        <div className="sidebar-item">
+          <img src={list_product_icon} alt="" />
+          <p>Hero Banners</p>
         </div>
       </Link>
     </div>

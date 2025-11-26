@@ -1,21 +1,24 @@
-import React from 'react'
-import './Admin.css'
-import '../../Components/Sidebar/Sidebar'
-import Sidebar from '../../Components/Sidebar/Sidebar'
-import {Routes,Route} from 'react-router-dom'
-import ListProduct from '../../Components/ListProduct/ListProduct'
-import AddProduct from '../../Components/AddProduct/AddProduct'
+// admin/src/Pages/Admin/Admin.jsx
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import AddProduct from '../../Components/AddProduct/AddProduct';
+import ListProduct from '../../Components/ListProduct/ListProduct';
+import AddHero from '../../Components/AddHero/AddHero';
+import ListHero from '../../Components/ListHero/ListHero';
+
 const Admin = () => {
   return (
-    <div className='admin'>
-      <Sidebar/>
-
+    <div className="admin-main">
       <Routes>
-        <Route path='/addproduct' element={<AddProduct/>} />
-        <Route path='/listproduct' element={<ListProduct/> } />
+        <Route path="/" element={<Navigate to="/listproduct" replace />} />
+        <Route path="/addproduct" element={<AddProduct />} />
+        <Route path="/listproduct" element={<ListProduct />} />
+        <Route path="/addhero" element={<AddHero />} />
+        <Route path="/listhero" element={<ListHero />} />
+        <Route path="*" element={<Navigate to="/listproduct" replace />} />
       </Routes>
     </div>
-  )
-}
+  );
+};
 
-export default Admin
+export default Admin;
